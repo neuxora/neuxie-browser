@@ -452,7 +452,7 @@ test("without any key the control is one calm way to add a key, straight to Sett
   expect(page.getByRole("listbox").query()).toBeNull();
 });
 
-test("signed out where hosted models exist, Zephium AI is one sign-in away", async () => {
+test("signed out where hosted models exist, Neuxie AI is one sign-in away", async () => {
   await page.viewport(1200, 800);
   native.read.mockResolvedValue(view("anthropic/claude-opus-5-5"));
   native.account.mockResolvedValue({
@@ -489,9 +489,9 @@ test("signed out where hosted models exist, Zephium AI is one sign-in away", asy
   await screen.getByRole("button", { name: /Model: Claude Opus 5\.5/u }).click();
   // Zephium's own is pinned above every provider, ready or not.
   const rail = page.getByRole("tab").all();
-  expect(rail[0]!.element().getAttribute("aria-label")).toBe("Zephium AI, sign in to use");
+  expect(rail[0]!.element().getAttribute("aria-label")).toBe("Neuxie AI, sign in to use");
   expect(rail[1]!.element().getAttribute("aria-label")).toBe("Anthropic");
-  await page.getByRole("tab", { name: "Zephium AI, sign in to use" }).click();
+  await page.getByRole("tab", { name: "Neuxie AI, sign in to use" }).click();
   await expect.element(page.getByText("hosted models", { exact: false })).toBeVisible();
   await page.getByRole("button", { name: "Sign in" }).click();
   expect(native.command).toHaveBeenCalledWith("settings.account");

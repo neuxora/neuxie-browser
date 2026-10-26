@@ -67,7 +67,7 @@
 
   async function copyDetails() {
     if (!about) return;
-    const details = `Zephium ${about.version}\n${about.os} (${about.arch})`;
+    const details = `Neuxie ${about.version}\n${about.os} (${about.arch})`;
     try {
       await navigator.clipboard.writeText(details);
       notices.show(m.about_details_copied());
@@ -90,7 +90,7 @@
 <header class="settings-about hero">
   <ZephiumTile size={88} />
   <div class="identity">
-    <span class="zephium-wordmark" role="img" aria-label="Zephium"></span>
+    <span class="zephium-wordmark" role="img" aria-label="Neuxie"></span>
     <p class="meta">
       <span class="version">{about ? m.about_version({ version: about.version }) : ""}</span>
       {#if updatable && about}<Button
@@ -104,6 +104,18 @@
     <p class="platform">{platform}</p>
   </div>
   <AboutLinks />
+  <p class="upstream-credit">
+    Based on Zephium ·
+    <a
+      href="https://github.com/zephium-browser/Zephium"
+      onclick={(event) => {
+        event.preventDefault();
+        void commands
+          .browserOpenUrl("https://github.com/zephium-browser/Zephium", true)
+          .catch(() => {});
+      }}>github.com/zephium-browser/Zephium</a
+    >
+  </p>
 </header>
 <SettingsGroup title={m.about_group_software()}>
   <SettingsRow settingId="about.updates" title={m.pref_about_updates()} description={updateLine}>
@@ -219,6 +231,11 @@
   .zephium-wordmark {
     inline-size: 150px;
     block-size: 22px;
+  }
+
+  .upstream-credit a {
+    color: inherit;
+    text-decoration: underline;
   }
 
   .meta,

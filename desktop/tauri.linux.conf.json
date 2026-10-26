@@ -1,12 +1,12 @@
 {
-  "productName": "app.zephium",
+  "productName": "app.neuxie",
   "app": {
     "enableGTKAppId": true,
     "windows": [
       {
         "label": "main",
         "create": false,
-        "title": "Zephium",
+        "title": "Neuxie Browser",
         "width": 1200,
         "height": 800,
         "minWidth": 680,
@@ -19,10 +19,10 @@
   "bundle": {
     "linux": {
       "deb": {
-        "desktopTemplate": "linux/zephium.desktop.hbs"
+        "desktopTemplate": "linux/neuxie.desktop.hbs"
       },
       "rpm": {
-        "desktopTemplate": "linux/zephium.desktop.hbs"
+        "desktopTemplate": "linux/neuxie.desktop.hbs"
       }
     }
   }

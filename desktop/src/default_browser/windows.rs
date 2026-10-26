@@ -13,10 +13,10 @@ use windows::Win32::System::Registry::{
 use windows::Win32::UI::Shell::{SHChangeNotify, ShellExecuteW, SHCNE_ASSOCCHANGED, SHCNF_IDLIST};
 use windows::Win32::UI::WindowsAndMessaging::SW_SHOWNORMAL;
 
-pub(crate) const CLIENT: &str = "Zephium";
+pub(crate) const CLIENT: &str = "Neuxie";
 pub(crate) const PROG_ID: &str = "ZephiumURL";
-const CLIENT_KEY: &str = r"Software\Clients\StartMenuInternet\Zephium";
-const CAPABILITIES: &str = r"Software\Clients\StartMenuInternet\Zephium\Capabilities";
+const CLIENT_KEY: &str = r"Software\Clients\StartMenuInternet\Neuxie";
+const CAPABILITIES: &str = r"Software\Clients\StartMenuInternet\Neuxie\Capabilities";
 const SCHEMES: [&str; 2] = ["http", "https"];
 
 /// Whether the person's own choice for both web schemes is Zephium.
@@ -43,7 +43,7 @@ pub(crate) fn register() -> bool {
         (
             format!(r"Software\Classes\{PROG_ID}"),
             "",
-            "Zephium Web Page".into(),
+            "Neuxie Web Page".into(),
         ),
         (
             format!(r"Software\Classes\{PROG_ID}"),

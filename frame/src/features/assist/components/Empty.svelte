@@ -103,7 +103,7 @@
 
 <style>
   /* The start: a calm composition standing on the composer, read top to bottom
-     as mark, one line of greeting, and what Zephium can begin with. */
+     as mark, one line of greeting, and what Neuxie can begin with. */
   .start {
     display: flex;
     flex-direction: column;

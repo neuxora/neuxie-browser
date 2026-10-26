@@ -166,7 +166,7 @@ test("a hosted take refused for its plan opens the account, not a retry", async 
   );
   await expect
     .element(page.getByRole("alert"))
-    .toHaveTextContent("Dictation needs a different Zephium plan.");
+    .toHaveTextContent("Dictation needs a different Neuxie plan.");
   await page.getByRole("button", { name: "See plans" }).click();
   expect(native.run).toHaveBeenCalledWith("settings.account");
   await screen.unmount();

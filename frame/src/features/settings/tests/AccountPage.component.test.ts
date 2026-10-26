@@ -67,7 +67,7 @@ const signedIn = account({
       kind: "plan",
       plan: "pro",
       interval: "monthly",
-      name: "Zephium Pro",
+      name: "Neuxie Pro",
       price: { amount_minor: 2000, currency: "usd" },
       features: [],
     },
@@ -84,7 +84,7 @@ test("signing in takes an address, then the emailed code, with no password", asy
     .mockResolvedValueOnce(reply(signedIn));
   const screen = await render(AccountPage);
 
-  await expect.element(screen.getByRole("heading", { name: "Sign in to Zephium" })).toBeVisible();
+  await expect.element(screen.getByRole("heading", { name: "Sign in to Neuxie" })).toBeVisible();
   const continueButton = screen.getByRole("button", { name: "Continue" });
   await expect.element(continueButton).toBeDisabled();
   await screen.getByLabelText("Email address").fill("ada@example.com");
@@ -310,7 +310,7 @@ test("signing out returns to the sign-in screen", async () => {
   await expect.element(screen.getByLabelText("Email address")).toBeVisible();
 });
 
-test("with Work and AI off the plan stays and Zephium AI's usage and credits go", async () => {
+test("with Work and AI off the plan stays and Neuxie AI's usage and credits go", async () => {
   await page.viewport(1100, 1200);
   native.settings = { "ai.enabled": "false" };
   await preferences.init();
@@ -320,7 +320,7 @@ test("with Work and AI off the plan stays and Zephium AI's usage and credits go"
   await expect.element(screen.getByRole("button", { name: "Upgrade" })).toBeVisible();
   expect(screen.getByText("Included credits").elements()).toHaveLength(0);
   expect(screen.getByText("Purchased credits").elements()).toHaveLength(0);
-  expect(screen.getByText("Zephium AI").elements()).toHaveLength(0);
+  expect(screen.getByText("Neuxie AI").elements()).toHaveLength(0);
   screen.unmount();
   preferences.dispose();
   native.settings = {};

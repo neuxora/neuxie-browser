@@ -14,7 +14,10 @@ export const PAGE = { x: 248, y: 8, width: 624, height: 544 } as const;
 export const NEWTAB = {
   notch: { width: 380, height: 38 },
   horizon: 326,
-  name: { x: 199.5, y: 223, w: 225, h: 32.31 },
+  // The name box keeps the letters' own aspect (773.93 / 3652.93) at the
+  // width the mock draws it, so the still wordmark and the dots that gather
+  // into it are never stretched; its bottom edge holds the old baseline.
+  name: { x: 199.5, y: 207.64, w: 225, h: 47.67 },
   when: 265,
 } as const;
 

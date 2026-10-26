@@ -26,7 +26,7 @@ impl Host {
             CreateWindowExW(
                 WS_EX_TOOLWINDOW,
                 windows::core::w!("STATIC"),
-                windows::core::w!("Zephium native qualification"),
+                windows::core::w!("Neuxie native qualification"),
                 WS_OVERLAPPEDWINDOW,
                 0,
                 0,

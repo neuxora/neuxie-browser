@@ -54,7 +54,7 @@ impl PopupWindow {
             let hwnd = CreateWindowExW(
                 WS_EX_TOOLWINDOW,
                 class.lpszClassName,
-                w!("Extension — Zephium"),
+                w!("Extension — Neuxie"),
                 WS_POPUP | WS_THICKFRAME,
                 top.x,
                 top.y,

@@ -790,7 +790,7 @@ const drafts: DraftView[] = [
     id: "draft-linkedin",
     destination: "linkedin",
     body: "Excited to share that we've joined Y Combinator's winter batch. 🚀\n\nWe're building the browser where an agent does the work with you, on a canvas you can watch and steer. If you're in SF this spring, come say hi.",
-    author: { name: "Alex Novak", handle: "Founder at Zephium" },
+    author: { name: "Alex Novak", handle: "Founder at Neuxie" },
     send: "draft",
   },
   {
@@ -1628,7 +1628,7 @@ export const looks: Record<string, { object: ObjectView; width: number }[]> = {
         labels: ["area: work", "enhancement"],
         summary:
           "Asks for an agent that learns which REST request powers an action and reuses it instead of driving the page.",
-        url: "https://github.com/zephium-browser/Zephium/issues/103",
+        url: "https://github.com/neuxora/neuxie-browser/issues/103",
       },
       width: 560,
     },
@@ -1646,7 +1646,7 @@ export const looks: Record<string, { object: ObjectView; width: number }[]> = {
         ],
         facts: [{ label: "Changed files", value: "14" }],
         labels: [],
-        url: "https://github.com/zephium-browser/Zephium/pull/48",
+        url: "https://github.com/neuxora/neuxie-browser/pull/48",
       },
       width: 480,
     },

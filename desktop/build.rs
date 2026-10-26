@@ -8,12 +8,13 @@ mod foreground_probe_config;
 mod navigation_probe_config;
 
 const MAIN_LABEL: &str = "main";
-const LINUX_APP_ID: &str = "app.zephium";
-const DEVELOPMENT_IDENTIFIER: &str = "app.zephium.dev";
-const LINUX_DESKTOP_TEMPLATE: &str = "linux/zephium.desktop.hbs";
+const LINUX_APP_ID: &str = "app.neuxie";
+const DEVELOPMENT_IDENTIFIER: &str = "app.neuxie.dev";
+const LINUX_DESKTOP_TEMPLATE: &str = "linux/neuxie.desktop.hbs";
 const PACKAGE_LICENSE: &str = "MPL-2.0 AND CC-BY-SA-3.0";
-const LEGAL_RESOURCES: [(&str, &str); 3] = [
-    ("../LICENSE", "licenses/Zephium-MPL-2.0.txt"),
+const LEGAL_RESOURCES: [(&str, &str); 4] = [
+    ("../LICENSE", "licenses/MPL-2.0.txt"),
+    ("../NOTICE", "licenses/UPSTREAM-NOTICE.txt"),
     (
         "../assets/blocker-seed/v1/LICENSE-CC-BY-SA-3.0.txt",
         "licenses/blocker/CC-BY-SA-3.0.txt",
@@ -342,9 +343,9 @@ fn validate_linux_desktop_template(path: &Path) -> io::Result<()> {
     // `%U` is how the desktop hands a clicked link to the default browser.
     for exact in [
         "Exec={{exec}} %U",
-        "StartupWMClass=app.zephium",
+        "StartupWMClass=app.neuxie",
         "Icon={{icon}}",
-        "Name=Zephium",
+        "Name=Neuxie Browser",
         "Terminal=false",
         "Type=Application",
     ] {

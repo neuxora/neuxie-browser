@@ -194,7 +194,7 @@ fn account_routes(seen: &Seen) -> (u16, String, String) {
 
 fn service(origin: &str, vault: Arc<MemoryVault>, settings: Arc<MemorySettings>) -> Service {
     settings.set("account.server".into(), origin.into());
-    Service::new(settings, vault, "Zephium 1.0 · macOS", "1.0.0").unwrap()
+    Service::new(settings, vault, "Neuxie 1.0 · macOS", "1.0.0").unwrap()
 }
 
 async fn signed_in() -> (Service, Arc<MemoryVault>, Log, String) {
@@ -246,7 +246,7 @@ async fn email_code_signs_in_stores_the_bearer_and_loads_the_plan() {
     let body: serde_json::Value = serde_json::from_str(&sign_in.body).unwrap();
     assert_eq!(
         body,
-        serde_json::json!({"email": "a@b.co", "otp": "123456", "device": "Zephium 1.0 · macOS"})
+        serde_json::json!({"email": "a@b.co", "otp": "123456", "device": "Neuxie 1.0 · macOS"})
     );
     assert!(!sign_in.headers.contains("authorization"));
 

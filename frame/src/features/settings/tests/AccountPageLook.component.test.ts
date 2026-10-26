@@ -146,14 +146,14 @@ const days: AccountHistoryV1 = (() => {
 const devices: AccountSessionV1[] = [
   {
     id: "s1",
-    device: "Zephium on macOS",
+    device: "Neuxie on macOS",
     created_at: "2026-09-02T09:00:00Z",
     last_used_at: null,
     current: true,
   },
   {
     id: "s2",
-    device: "Zephium on Windows",
+    device: "Neuxie on Windows",
     created_at: "2026-09-28T18:30:00Z",
     last_used_at: null,
     current: false,
@@ -218,7 +218,7 @@ const signedIn: AccountV1 = {
       kind: "plan",
       plan: "pro",
       interval: "monthly",
-      name: "Zephium Pro",
+      name: "Neuxie Pro",
       price: { amount_minor: 2000, currency: "usd" },
       features: ["Frontier models", "More usage"],
     },
@@ -226,7 +226,7 @@ const signedIn: AccountV1 = {
       kind: "plan",
       plan: "pro",
       interval: "yearly",
-      name: "Zephium Pro",
+      name: "Neuxie Pro",
       price: { amount_minor: 19200, currency: "usd" },
       features: ["Frontier models", "More usage"],
     },
@@ -280,7 +280,7 @@ test("Settings → Account signed out, waiting for a code, and signed in", async
         kind: "plan",
         plan: "max",
         interval: "monthly",
-        name: "Zephium Max",
+        name: "Neuxie Max",
         price: { amount_minor: 10000, currency: "usd" },
         features: [],
       },
@@ -315,7 +315,7 @@ test("Settings → Account signed out, waiting for a code, and signed in", async
     await screen.getByRole("button", { name: "Details for this request" }).nth(1).click();
     await settle();
     document.querySelector(".settings-content")?.scrollTo({ top: scroll });
-    await screen.getByText("Your Zephium AI credits by task", { exact: false }).hover();
+    await screen.getByText("Your Neuxie AI credits by task", { exact: false }).hover();
   };
   await shoot("pro-history", pro, openHistory(240));
   // A day's heading holds at the top while its rows scroll under it.

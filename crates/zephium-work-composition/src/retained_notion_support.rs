@@ -199,7 +199,7 @@ mod tests {
     #[test]
     fn strict_target_accepts_only_an_exact_notion_page() {
         let accepted = parse_target(
-            "https://app.notion.com/p/Zephium-Agent-Qualification-0123456789abcdef0123456789abcdef",
+            "https://app.notion.com/p/Neuxie-Agent-Qualification-0123456789abcdef0123456789abcdef",
         )
         .unwrap();
         let url = accepted.as_url();

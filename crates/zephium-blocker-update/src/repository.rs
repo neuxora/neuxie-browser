@@ -88,7 +88,7 @@ async fn verify_repository_with_time(
                     config.targets_base_url.clone(),
                     config.limits.request_timeout,
                     config.limits.connect_timeout,
-                    "Zephium-Filter-Updater/1",
+                    "Neuxie-Filter-Updater/1",
                 )
                 .map_err(|_| VerificationError::Transport)?,
             )

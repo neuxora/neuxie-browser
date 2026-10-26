@@ -94,7 +94,7 @@ const OPENAI_RESPONSES_URL: &str = "https://api.openai.com/v1/responses";
 const OPENAI_INPUT_TOKENS_URL: &str = "https://api.openai.com/v1/responses/input_tokens";
 const ANTHROPIC_MESSAGES_URL: &str = "https://api.anthropic.com/v1/messages";
 const ANTHROPIC_VERSION: &str = "2023-06-01";
-pub(crate) const PRODUCT_USER_AGENT: &str = "Zephium-Agent-Browser/0.1";
+pub(crate) const PRODUCT_USER_AGENT: &str = "Neuxie-Agent-Browser/0.1";
 const OPENAI_CLIENT_REQUEST_ID_HEADER: &str = "x-client-request-id";
 const OPENAI_CLIENT_REQUEST_ID_DOMAIN: &[u8] = b"ZEPHIUM-OPENAI-CLIENT-REQUEST-ID-1\0";
 

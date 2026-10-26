@@ -578,9 +578,9 @@ pub(crate) fn finish_after_exit(clean: bool) {
 #[cfg(target_os = "windows")]
 fn explain_deferred_update() {
     rfd::MessageDialog::new()
-        .set_title("Zephium update postponed")
+        .set_title("Neuxie update postponed")
         .set_level(rfd::MessageLevel::Warning)
-        .set_description("Zephium could not finish the update safely. The downloaded update has been kept. Open Zephium again to retry from Settings → About.")
+        .set_description("Neuxie could not finish the update safely. The downloaded update has been kept. Open Neuxie again to retry from Settings → About.")
         .set_buttons(rfd::MessageButtons::Ok)
         .show();
 }

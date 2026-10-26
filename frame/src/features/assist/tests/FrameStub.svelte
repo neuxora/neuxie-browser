@@ -10,7 +10,7 @@
 
 <section class="frame">
   <header>
-    <h2>Zephium AI</h2>
+    <h2>Neuxie AI</h2>
     {#if actions}{@render actions()}{/if}
   </header>
   <div class="content">

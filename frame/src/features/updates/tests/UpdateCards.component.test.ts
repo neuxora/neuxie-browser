@@ -76,11 +76,11 @@ test("a first run only marks the version it started at", async () => {
 test("after an update, the card links its release notes and goes once read", async () => {
   await start({ state: "upToDate" }, { "notice.seen-version": "1.0.0" });
   const screen = await render(UpdateCards);
-  await expect.element(screen.getByText("Zephium updated to 1.0.1")).toBeVisible();
+  await expect.element(screen.getByText("Neuxie updated to 1.0.1")).toBeVisible();
 
   await screen.getByRole("button", { name: "See what's new" }).click();
   expect(native.openUrl).toHaveBeenCalledWith(
-    "https://github.com/zephium-browser/Zephium/releases/tag/v1.0.1",
+    "https://github.com/neuxora/neuxie-browser/releases/tag/v1.0.1",
     true,
   );
   await expect.poll(() => screen.container.querySelector(".update-stack")).toBeNull();
@@ -96,7 +96,7 @@ test("the close button acknowledges the new version without opening anything", a
   expect(native.openUrl).not.toHaveBeenCalled();
 });
 
-test("a platform security update comes first and returns only with a newer Zephium", async () => {
+test("a platform security update comes first and returns only with a newer Neuxie", async () => {
   await start({ state: "upToDate" }, { "notice.seen-version": "1.0.0" }, [
     { kind: "review_overdue", update_target: "zephium" },
     { kind: "update_recommended", update_target: "operating_system" },
@@ -105,7 +105,7 @@ test("a platform security update comes first and returns only with a newer Zephi
   const title = IS_MAC ? "macOS has security updates" : "Your system has security updates";
   await expect.element(screen.getByText(title)).toBeVisible();
   await expect.element(screen.getByText("Install them to keep browsing safely.")).toBeVisible();
-  expect(screen.container.textContent).not.toContain("Zephium updated");
+  expect(screen.container.textContent).not.toContain("Neuxie updated");
   expect(screen.container.textContent).not.toContain("review");
 
   if (IS_MAC) {
@@ -118,10 +118,10 @@ test("a platform security update comes first and returns only with a newer Zephi
   await expect
     .poll(() => native.settingSet.mock.calls)
     .toContainEqual(["notice.security-dismissed", "1.0.1"]);
-  await expect.element(screen.getByText("Zephium updated to 1.0.1")).toBeVisible();
+  await expect.element(screen.getByText("Neuxie updated to 1.0.1")).toBeVisible();
 });
 
-test("WebView2 is named, with no action Zephium cannot take", async () => {
+test("WebView2 is named, with no action Neuxie cannot take", async () => {
   await start({ state: "upToDate" }, { "notice.seen-version": "1.0.1" }, [
     { kind: "update_recommended", update_target: "browser_runtime" },
   ]);
@@ -178,8 +178,8 @@ test("the rail's one glyph relaunches an update, or hands a notice to About", as
   await start({ state: "upToDate" }, { "notice.seen-version": "1.0.0" });
   const onabout = vi.fn();
   const screen = await render(UpdateGlyph, { props: { onabout } });
-  const plate = screen.getByRole("button", { name: "Zephium updated to 1.0.1" });
-  await expect.element(plate).toHaveAttribute("title", "Zephium updated to 1.0.1");
+  const plate = screen.getByRole("button", { name: "Neuxie updated to 1.0.1" });
+  await expect.element(plate).toHaveAttribute("title", "Neuxie updated to 1.0.1");
   await plate.click();
   expect(onabout).toHaveBeenCalledOnce();
   expect(native.settingSet).toHaveBeenCalledWith("notice.seen-version", "1.0.1");
@@ -197,7 +197,7 @@ test("manual installation remains actionable in the sidebar and compact rail", a
   const screen = await render(UpdateCards);
   await screen.getByRole("button", { name: "Download and install manually" }).click();
   expect(native.openUrl).toHaveBeenCalledWith(
-    "https://github.com/zephium-browser/Zephium/releases/tag/v1.0.2",
+    "https://github.com/neuxora/neuxie-browser/releases/tag/v1.0.2",
     true,
   );
   await screen.unmount();

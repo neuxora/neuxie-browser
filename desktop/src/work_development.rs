@@ -1231,9 +1231,9 @@ mod tests {
         )
         .unwrap();
         let nodes = if duplicate_result {
-            r#"[{"k":1,"r":"document","o":16},{"k":2,"p":0,"r":"dialog","n":"Search Notion"},{"k":3,"p":1,"r":"combobox","n":"Search","o":2,"v":{"k":"text","value":"Zephium Agent Qualification"}},{"k":4,"p":1,"r":"option","n":"Zephium Agent Qualification Current Page 3nigma • Edited 20h ago","o":5},{"k":5,"p":1,"r":"option","n":"Zephium Agent Qualification Current Page duplicate","o":5},{"k":6,"p":0,"r":"button","n":"Zephium Agent Qualification","o":1}]"#
+            r#"[{"k":1,"r":"document","o":16},{"k":2,"p":0,"r":"dialog","n":"Search Notion"},{"k":3,"p":1,"r":"combobox","n":"Search","o":2,"v":{"k":"text","value":"Neuxie Agent Qualification"}},{"k":4,"p":1,"r":"option","n":"Neuxie Agent Qualification Current Page 3nigma • Edited 20h ago","o":5},{"k":5,"p":1,"r":"option","n":"Neuxie Agent Qualification Current Page duplicate","o":5},{"k":6,"p":0,"r":"button","n":"Neuxie Agent Qualification","o":1}]"#
         } else {
-            r#"[{"k":1,"r":"document","o":16},{"k":2,"p":0,"r":"dialog","n":"Search Notion"},{"k":3,"p":1,"r":"combobox","n":"Search","o":2,"v":{"k":"text","value":"Zephium Agent Qualification"}},{"k":4,"p":1,"r":"option","n":"Zephium Agent Qualification Current Page 3nigma • Edited 20h ago","o":5},{"k":5,"p":0,"r":"button","n":"Zephium Agent Qualification","o":1}]"#
+            r#"[{"k":1,"r":"document","o":16},{"k":2,"p":0,"r":"dialog","n":"Search Notion"},{"k":3,"p":1,"r":"combobox","n":"Search","o":2,"v":{"k":"text","value":"Neuxie Agent Qualification"}},{"k":4,"p":1,"r":"option","n":"Neuxie Agent Qualification Current Page 3nigma • Edited 20h ago","o":5},{"k":5,"p":0,"r":"button","n":"Neuxie Agent Qualification","o":1}]"#
         };
         let wire = format!(r#"{{"v":1,"i":1,"g":1,"c":"complete","n":{nodes}}}"#);
         let snapshot = decode_semantic_snapshot(
@@ -1310,7 +1310,7 @@ mod tests {
                 }],
                 fills: vec![FillApproval {
                     target_name: "Search".into(),
-                    value: "Zephium Agent Qualification".into(),
+                    value: "Neuxie Agent Qualification".into(),
                 }],
             },
         )
@@ -1386,7 +1386,7 @@ mod tests {
                 }],
                 fills: vec![FillApproval {
                     target_name: "Search".into(),
-                    value: "Zephium Agent Qualification".into(),
+                    value: "Neuxie Agent Qualification".into(),
                 }],
             },
         )
@@ -1445,7 +1445,7 @@ mod tests {
                     ClickApproval {
                         target_name: None,
                         target_name_prefix: Some(
-                            "Zephium Agent Qualification Current Page ".into(),
+                            "Neuxie Agent Qualification Current Page ".into(),
                         ),
                         target_role: Some(ClickTargetRole::Option),
                         effect: ClickEffect::Read,
@@ -1454,7 +1454,7 @@ mod tests {
                 ],
                 fills: vec![FillApproval {
                     target_name: "Search".into(),
-                    value: "Zephium Agent Qualification".into(),
+                    value: "Neuxie Agent Qualification".into(),
                 }],
             },
         )
@@ -1507,7 +1507,7 @@ mod tests {
                     ClickApproval {
                         target_name: None,
                         target_name_prefix: Some(
-                            "Zephium Agent Qualification Current Page ".into(),
+                            "Neuxie Agent Qualification Current Page ".into(),
                         ),
                         target_role: Some(ClickTargetRole::Option),
                         effect: ClickEffect::Read,
@@ -1516,7 +1516,7 @@ mod tests {
                 ],
                 fills: vec![FillApproval {
                     target_name: "Search".into(),
-                    value: "Zephium Agent Qualification".into(),
+                    value: "Neuxie Agent Qualification".into(),
                 }],
             },
         )

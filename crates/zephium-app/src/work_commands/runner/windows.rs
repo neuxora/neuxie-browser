@@ -133,7 +133,7 @@ pub(super) struct Profile {
 impl Profile {
     pub(super) fn create() -> Result<Self, Failure> {
         let name = wide(OsStr::new(&format!(
-            "Zephium.Work.{}",
+            "Neuxie.Work.{}",
             zephium_core::work::WorkArtifactId::generate()
         )))?;
         let sid = unsafe {

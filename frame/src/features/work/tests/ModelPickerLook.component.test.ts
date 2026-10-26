@@ -125,7 +125,7 @@ test(
     await shoot("google-refused");
     await rail(/^Custom/u).click();
     await shoot("server");
-    await rail(/^Zephium AI/u).click();
+    await rail(/^Neuxie AI/u).click();
     await shoot("hosted");
     await rail(/^OpenRouter/u).click();
     await userEvent.keyboard("son");

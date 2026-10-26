@@ -1,0 +1,23 @@
+Neuxie
+======
+
+Neuxie is a fork of Zephium (https://github.com/zephium-browser/Zephium),
+published by the Zephium project under the Mozilla Public License 2.0 (MPL-2.0).
+The full license text is in LICENSE at the root of this repository.
+
+This repository is an unaffiliated fork. It is not endorsed by, sponsored by, or
+affiliated with the Zephium project or its maintainers. The fork renames the
+product surface (application name, identifier, icons, wordmark and user-facing
+strings) and adds an experimental Linux build; the browser engine, application
+architecture and the overwhelming majority of the source come from Zephium.
+
+The source of this fork is this repository:
+https://github.com/neuxora/neuxie-browser
+
+Bundled third-party data: the blocker seed lists are distributed under
+CC-BY-SA-3.0; see assets/blocker-seed/v1/NOTICE for their attribution.
+
+Trademarks and names remain the property of their respective owners.
+
+Neuxie wordmark letterforms derived from DejaVu Sans Bold outlines, Bitstream
+Vera font license.

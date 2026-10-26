@@ -64,7 +64,7 @@ test("Voice lists only usable engines and says where audio goes, in both themes"
   await expect
     .element(
       page.getByText(
-        "This device can’t recognize Polish (Poland), so dictation in it uses Zephium AI.",
+        "This device can’t recognize Polish (Poland), so dictation in it uses Neuxie AI.",
       ),
     )
     .toBeVisible();
@@ -90,7 +90,7 @@ test("with no engine on Windows the row says how to set one up", async () => {
   );
   const screen = await render(VoiceRowStage);
   await expect
-    .element(page.getByText("Sign in to Zephium AI or add an OpenAI or Groq key to dictate."))
+    .element(page.getByText("Sign in to Neuxie AI or add an OpenAI or Groq key to dictate."))
     .toBeVisible();
   await expect.element(page.getByRole("button", { name: "Dictation" })).toBeDisabled();
   await shoot("none");

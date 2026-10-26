@@ -789,7 +789,7 @@ fn a_first_run_names_its_work_from_its_finish() {
 fn a_subject_needs_its_noun_title_and_address_and_sheds_what_overflows() {
     let base = |extra: serde_json::Value| {
         let mut value = json!({"kind":"subject","noun":"Issue","title":"Rerun workflows like Playwright",
-            "url":"https://github.com/zephium-browser/Zephium/issues/103"});
+            "url":"https://github.com/neuxora/neuxie-browser/issues/103"});
         value
             .as_object_mut()
             .unwrap()

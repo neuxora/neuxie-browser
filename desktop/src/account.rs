@@ -386,7 +386,7 @@ fn device_label(app: &tauri::AppHandle) -> String {
     } else {
         "Linux"
     };
-    format!("Zephium {} · {system}", app.package_info().version)
+    format!("Neuxie {} · {system}", app.package_info().version)
 }
 
 /// Creates the account service after the app store exists. A session left in
@@ -1269,7 +1269,7 @@ pub(crate) async fn account_export(caller: WebviewWindow) -> AccountExportV1 {
     let picked = tokio::task::spawn_blocking(move || {
         app.dialog()
             .file()
-            .set_file_name("Zephium account.json")
+            .set_file_name("Neuxie account.json")
             .add_filter("JSON", &["json"])
             .blocking_save_file()
     })

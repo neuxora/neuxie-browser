@@ -1189,7 +1189,7 @@ fn request_classified_startup_failure(
     detail: &str,
 ) {
     write_diagnostic(format_args!(
-        "startup: failed to initialize Zephium: {cause}"
+        "startup: failed to initialize Neuxie: {cause}"
     ));
     startup_alert::show_then(app, problem, detail, request_orderly_terminal_failure);
 }
@@ -1294,7 +1294,7 @@ fn request_pre_shell_startup_failure_with_store(
     store: Arc<SqliteStore>,
 ) {
     write_diagnostic(format_args!(
-        "startup: failed to initialize Zephium: {error}"
+        "startup: failed to initialize Neuxie: {error}"
     ));
     let store_owner = app
         .try_state::<StartupStore>()
@@ -1322,7 +1322,7 @@ fn request_pre_shell_startup_failure_with_blocker(
     blocker: Arc<ManagedBlocker>,
 ) {
     write_diagnostic(format_args!(
-        "startup: failed to initialize Zephium: {error}"
+        "startup: failed to initialize Neuxie: {error}"
     ));
     let engine_owner = app
         .try_state::<StartupEngine>()
@@ -5144,7 +5144,7 @@ fn build_quit_menu_item(
 ) -> tauri::Result<tauri::menu::MenuItem<tauri::Wry>> {
     // Native terminate: bypasses Tauri's ExitRequested path on macOS.
     // An ordinary menu event reaches the existing draft/store shutdown barrier.
-    tauri::menu::MenuItemBuilder::with_id("browser.quit", menu_text::label("Quit Zephium"))
+    tauri::menu::MenuItemBuilder::with_id("browser.quit", menu_text::label("Quit Neuxie"))
         .accelerator("CmdOrCtrl+Q")
         .build(handle)
 }
@@ -5167,9 +5167,9 @@ fn build_menu(
 
     // About is Settings' About page: the system panel cannot open links in a tab.
     let about =
-        tauri::menu::MenuItemBuilder::with_id(help::ABOUT, menu_text::label("About Zephium"))
+        tauri::menu::MenuItemBuilder::with_id(help::ABOUT, menu_text::label("About Neuxie"))
             .build(handle)?;
-    let app_menu = SubmenuBuilder::new(handle, menu_text::label("Zephium"))
+    let app_menu = SubmenuBuilder::new(handle, menu_text::label("Neuxie"))
         .item(&about)
         .separator()
         .item(&item("browser.settings")?)
@@ -5178,7 +5178,7 @@ fn build_menu(
     let app_menu = app_menu
         .services_with_text(menu_text::label("Services"))
         .separator()
-        .hide_with_text(menu_text::label("Hide Zephium"))
+        .hide_with_text(menu_text::label("Hide Neuxie"))
         .hide_others_with_text(menu_text::label("Hide Others"))
         .show_all_with_text(menu_text::label("Show All"))
         .separator();
@@ -5826,7 +5826,7 @@ pub fn run() {
         target_os = "linux"
     )) {
         diagnostic!(
-            "Zephium does not support this platform. Use macOS, Windows, or Linux (experimental)."
+            "Neuxie does not support this platform. Use macOS, Windows, or Linux (experimental)."
         );
         std::process::exit(1);
     }
@@ -6848,7 +6848,7 @@ pub fn run() {
                         .map_err(|error| std::io::Error::other(error.to_string()))?,
                 ),
             )
-            .title("Zephium")
+            .title("Neuxie Browser")
             .incognito(true)
             .devtools(cfg!(debug_assertions))
             .general_autofill_enabled(false)
@@ -7055,7 +7055,7 @@ pub fn run() {
         })
         .build(context)
         .unwrap_or_else(|error| {
-            diagnostic!("startup: failed to build Zephium: {error}");
+            diagnostic!("startup: failed to build Neuxie: {error}");
             #[cfg(not(target_os = "linux"))]
             {
                 let error = error.to_string();
@@ -8135,7 +8135,7 @@ mod tests {
             config
                 .get("productName")
                 .and_then(serde_json::Value::as_str),
-            Some("app.zephium")
+            Some("app.neuxie")
         );
         for pointer in [
             "/bundle/linux/deb/desktopTemplate",
@@ -8143,13 +8143,13 @@ mod tests {
         ] {
             assert_eq!(
                 config.pointer(pointer).and_then(serde_json::Value::as_str),
-                Some("linux/zephium.desktop.hbs")
+                Some("linux/neuxie.desktop.hbs")
             );
         }
-        let template = include_str!("../linux/zephium.desktop.hbs");
+        let template = include_str!("../linux/neuxie.desktop.hbs");
         for exact in [
-            "Name=Zephium",
-            "StartupWMClass=app.zephium",
+            "Name=Neuxie Browser",
+            "StartupWMClass=app.neuxie",
             "Exec={{exec}} %U",
             "Icon={{icon}}",
         ] {

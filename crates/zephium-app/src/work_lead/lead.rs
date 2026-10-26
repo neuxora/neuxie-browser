@@ -1613,34 +1613,34 @@ where
         step.note = Some(
             match failure {
                 CallFailure::Refused(WorkModelError::OverBudget) if hosted => {
-                    "Zephium AI's included usage is spent; upgrade, buy extra usage or use your own key"
+                    "Neuxie AI's included usage is spent; upgrade, buy extra usage or use your own key"
                 }
                 CallFailure::Refused(WorkModelError::Hosted { refusal, .. }) => match refusal {
                     HostedRefusal::PlanRequired => {
-                        "The chosen Zephium AI model needs another plan; see plans in Settings → Account"
+                        "The chosen Neuxie AI model needs another plan; see plans in Settings → Account"
                     }
                     HostedRefusal::BillingReview => {
-                        "The Zephium account is under billing review; open Settings → Account"
+                        "The Neuxie account is under billing review; open Settings → Account"
                     }
                     HostedRefusal::OutOfCredits => {
-                        "Zephium AI's included usage is spent; upgrade, buy extra usage or use your own key"
+                        "Neuxie AI's included usage is spent; upgrade, buy extra usage or use your own key"
                     }
                     HostedRefusal::DailyLimit => {
-                        "The daily Zephium AI limit is reached; it resets at 00:00 UTC"
+                        "The daily Neuxie AI limit is reached; it resets at 00:00 UTC"
                     }
                     HostedRefusal::FreeUsagePaused => {
-                        "Free Zephium AI usage is paused for now; credits and your own key still work"
+                        "Free Neuxie AI usage is paused for now; credits and your own key still work"
                     }
                     HostedRefusal::ConfirmationLimited => {
-                        "Zephium AI is still confirming earlier requests; wait a moment"
+                        "Neuxie AI is still confirming earlier requests; wait a moment"
                     }
                     HostedRefusal::Paused => {
-                        "Zephium AI is paused as a spending protection; try later or use your own key"
+                        "Neuxie AI is paused as a spending protection; try later or use your own key"
                     }
                     _ => "The model's turn could not be used",
                 },
                 CallFailure::Refused(WorkModelError::Unauthorized) if hosted => {
-                    "The Zephium account's session ended; sign in again in Settings → Account"
+                    "The Neuxie account's session ended; sign in again in Settings → Account"
                 }
                 CallFailure::Refused(WorkModelError::MissingKey) => {
                     "No key is set for the chosen model; add one in Settings → AI"

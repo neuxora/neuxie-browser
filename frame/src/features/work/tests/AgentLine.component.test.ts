@@ -458,8 +458,8 @@ test("every run that ended early says why in Rust's words, or calmly that it sto
       "The search could not be sent",
     ],
     [
-      ended("interrupted", read, "outcome_unknown", "Zephium closed during this step"),
-      "Zephium closed during this step",
+      ended("interrupted", read, "outcome_unknown", "Neuxie closed during this step"),
+      "Neuxie closed during this step",
     ],
     [agentRun("failed"), "Stopped before it finished"],
   ];
@@ -484,7 +484,7 @@ test("every run that ended early says why in Rust's words, or calmly that it sto
   };
   const interrupted = await render(AgentLine, { session: left });
   await expect
-    .element(interrupted.getByText("Zephium closed during this run", { exact: true }))
+    .element(interrupted.getByText("Neuxie closed during this run", { exact: true }))
     .toBeVisible();
   await interrupted.unmount();
   left.dispose();
@@ -622,7 +622,7 @@ test("a run that ended short says what is missing and offers the one thing that 
   session.dispose();
 });
 
-test("a run stopped by spent Zephium AI usage says so and offers the fix", async () => {
+test("a run stopped by spent Neuxie AI usage says so and offers the fix", async () => {
   const session = new WorkSession("profile");
   session.selected = "objective";
   const failed = agentRun("failed");
@@ -633,14 +633,14 @@ test("a run stopped by spent Zephium AI usage says so and offers the fix", async
       turn: 2,
       kind: { kind: "turn" },
       status: "failed",
-      note: "Zephium AI's included usage is spent",
+      note: "Neuxie AI's included usage is spent",
       model_fault: "hosted_usage",
     },
   ];
   session.projection = { ...structuredClone(projection), executions: [failed] };
   const screen = await render(AgentLine, { session });
   await expect
-    .element(screen.getByText("You’ve used your included Zephium AI usage.", { exact: true }))
+    .element(screen.getByText("You’ve used your included Neuxie AI usage.", { exact: true }))
     .toBeVisible();
   await screen.getByRole("button", { name: "Upgrade or use a key" }).click();
   expect(native.command).toHaveBeenCalledWith("settings.account");
@@ -649,10 +649,10 @@ test("a run stopped by spent Zephium AI usage says so and offers the fix", async
 });
 
 test.each([
-  ["plan_required", "This model needs a different Zephium plan.", "See plans", "settings.account"],
+  ["plan_required", "This model needs a different Neuxie plan.", "See plans", "settings.account"],
   [
     "billing_review",
-    "Your Zephium account is under billing review.",
+    "Your Neuxie account is under billing review.",
     "Open account",
     "settings.account",
   ],
@@ -664,13 +664,13 @@ test.each([
   ],
   [
     "free_usage_paused",
-    "Free Zephium AI usage is paused right now. Credits and your own key still work.",
+    "Free Neuxie AI usage is paused right now. Credits and your own key still work.",
     "See plans",
     "settings.account",
   ],
   [
     "hosted_paused",
-    "Zephium AI is paused for now. Try again later, or use your own key.",
+    "Neuxie AI is paused for now. Try again later, or use your own key.",
     "Use your own key",
     "settings.ai",
   ],
@@ -707,7 +707,7 @@ test("zephium still confirming earlier requests asks for a moment and offers a p
   await expect
     .element(
       screen.getByText(
-        "Zephium AI is still confirming your earlier requests. Try again in a moment.",
+        "Neuxie AI is still confirming your earlier requests. Try again in a moment.",
       ),
     )
     .toBeVisible();

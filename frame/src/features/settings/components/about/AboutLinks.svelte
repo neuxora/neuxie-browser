@@ -3,23 +3,17 @@
   import { commands } from "$shared/ipc/bindings";
   import Icon from "$shared/ui/Icon";
   import BookOpen01Icon from "@hugeicons/core-free-icons/BookOpen01Icon";
-  import DiscordIcon from "@hugeicons/core-free-icons/DiscordIcon";
   import GithubIcon from "@hugeicons/core-free-icons/GithubIcon";
   import GlobeIcon from "@hugeicons/core-free-icons/GlobeIcon";
-  import HelpCircleIcon from "@hugeicons/core-free-icons/HelpCircleIcon";
-  import YoutubeIcon from "@hugeicons/core-free-icons/YoutubeIcon";
-  import { IS_MAC } from "$shared/platform";
   import { links } from "../../lib/links";
 
   const icons = {
     website: GlobeIcon,
-    docs: IS_MAC ? BookOpen01Icon : HelpCircleIcon,
     github: GithubIcon,
-    discord: DiscordIcon,
-    youtube: YoutubeIcon,
+    upstream: BookOpen01Icon,
   };
 
-  // The link opens in a tab of Zephium, never as a navigation of Settings.
+  // The link opens in a tab of Neuxie, never as a navigation of Settings.
   function open(event: MouseEvent, url: string) {
     event.preventDefault();
     void commands.browserOpenUrl(url, true).catch(() => {});

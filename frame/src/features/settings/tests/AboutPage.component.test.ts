@@ -52,7 +52,7 @@ afterEach(() => {
 test("updates are checked, downloaded and relaunched from About", async () => {
   native.status = { state: "upToDate" };
   const screen = await render(AboutPage);
-  await expect.element(screen.getByText("Zephium is up to date")).toBeVisible();
+  await expect.element(screen.getByText("Neuxie is up to date")).toBeVisible();
   await expect.element(screen.getByText("Version 1.0.1")).toBeVisible();
 
   await screen.getByRole("button", { name: "Check now" }).click();
@@ -69,7 +69,7 @@ test("updates are checked, downloaded and relaunched from About", async () => {
 
   await screen.getByRole("button", { name: "Release Notes" }).click();
   expect(native.openUrl).toHaveBeenCalledWith(
-    "https://github.com/zephium-browser/Zephium/releases/tag/v1.0.1",
+    "https://github.com/neuxora/neuxie-browser/releases/tag/v1.0.1",
     true,
   );
 });
@@ -130,7 +130,7 @@ test("manual installation opens the exact release instead of retrying an impossi
   const screen = await render(AboutPage);
   await screen.getByRole("button", { name: "Download and install manually" }).click();
   expect(native.openUrl).toHaveBeenCalledWith(
-    "https://github.com/zephium-browser/Zephium/releases/tag/v1.0.2",
+    "https://github.com/neuxora/neuxie-browser/releases/tag/v1.0.2",
     true,
   );
   expect(screen.getByRole("button", { name: "Relaunch to update" }).query()).toBeNull();
@@ -148,16 +148,14 @@ test("a postponed update remains ready with its failure explained", async () => 
   await expect.element(screen.getByRole("button", { name: "Relaunch to update" })).toBeEnabled();
 });
 
-test("the links open Zephium's own pages in a tab", async () => {
+test("the links open Neuxie's own pages in a tab", async () => {
   native.status = { state: "upToDate" };
   const screen = await render(AboutPage);
-  const links = screen.getByRole("navigation", { name: "Zephium on the web" });
+  const links = screen.getByRole("navigation", { name: "Neuxie on the web" });
   for (const [name, url] of [
-    ["Website", "https://zephium.app"],
-    [IS_MAC ? "Docs" : "Help", "https://zephium.app/docs"],
-    ["GitHub", "https://github.com/zephium-browser/Zephium"],
-    ["Discord", "https://discord.gg/tyveTUyEp7"],
-    ["YouTube", "https://www.youtube.com/@crynta"],
+    ["Website", "https://github.com/neuxora/neuxie-browser"],
+    ["GitHub", "https://github.com/neuxora/neuxie-browser"],
+    ["Based on Zephium", "https://github.com/zephium-browser/Zephium"],
   ] as const) {
     await links.getByRole("link", { name }).click();
     expect(native.openUrl).toHaveBeenLastCalledWith(url, true);
