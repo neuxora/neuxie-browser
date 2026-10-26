@@ -77,6 +77,8 @@ because of the GBM/dmabuf path. Launch with `WEBKIT_DISABLE_DMABUF_RENDERER=1`
 set in the environment to render through the fallback. That is a local
 workaround for this machine class, not something the shipped desktop entry sets.
 
+This fork does not ship signed auto-updates yet, so updates are manual: re-download the newer AppImage from the releases page.
+
 ## Changes from upstream
 
 - **Linux port.** Upstream refuses Linux at two gates; this fork carries the
