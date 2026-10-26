@@ -69,6 +69,9 @@ and run instead:
 ./app.neuxie_1.0.4_amd64.AppImage --appimage-extract-and-run
 ```
 
+A release download arrives without the executable bit; `chmod +x
+app.neuxie_1.0.4_amd64.AppImage` once before running it.
+
 The bundled WebKitGTK stays sandboxed, so the host must provide `bwrap` and
 `xdg-dbus-proxy` (Arch: `bubblewrap`, `xdg-dbus-proxy`).
 
