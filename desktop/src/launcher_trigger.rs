@@ -215,6 +215,8 @@ fn persist(key: &str, value: &str) {
 
 /// Registers what was chosen last time, or the default. The keymap override
 /// is honoured for a profile that set one before there was a recorder.
+/// Linux registers the same accelerator through `linux_global_shortcuts`.
+#[cfg_attr(target_os = "linux", allow(dead_code))]
 pub fn install(app: &AppHandle, keymap_override: Option<String>) {
     let shortcut = setting(SHORTCUT_KEY)
         .or(keymap_override)
