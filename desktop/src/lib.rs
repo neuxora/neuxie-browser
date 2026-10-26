@@ -105,6 +105,8 @@ mod presence;
 #[cfg(target_os = "windows")]
 mod privileged_runtime_windows;
 mod profiles;
+#[cfg(all(unix, not(target_os = "macos")))]
+mod render_backend;
 #[cfg(any(target_os = "windows", test))]
 mod renderer_recovery;
 mod resource_close;
@@ -3398,7 +3400,13 @@ fn reinstall_native_materials(app: &tauri::AppHandle) {
             &handle,
             &app_setting("appearance").unwrap_or_else(|| "system".into()),
         );
-        #[cfg(not(any(target_os = "macos", target_os = "windows")))]
+        #[cfg(target_os = "linux")]
+        for label in [MAIN_LABEL, overlay::PANEL_LABEL] {
+            if let Some(window) = handle.get_webview_window(label) {
+                platform::imp::apply_material_ground(&window);
+            }
+        }
+        #[cfg(not(any(target_os = "macos", target_os = "windows", target_os = "linux")))]
         let _ = handle;
     });
 }
@@ -5830,6 +5838,10 @@ pub fn run() {
         );
         std::process::exit(1);
     }
+    // WebKitGTK resolves its compositing path from the environment GTK starts
+    // with, so the decision must precede the context and both webviews.
+    #[cfg(target_os = "linux")]
+    render_backend::apply();
     // GTK 3 names the Wayland toplevel after the program name and the class
     // half of the X11 WM_CLASS after the program class. Both should say the
     // application id the installed desktop entry declares.

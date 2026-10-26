@@ -86,6 +86,7 @@ pub(crate) enum LinuxInitError {
     CompositionRollbackFailed(String),
     TopLevelHideFailed,
     TopLevelShowFailed,
+    SettingsUnavailable,
 }
 
 impl fmt::Display for LinuxInitError {
@@ -150,6 +151,8 @@ impl fmt::Display for LinuxInitError {
                 .write_str("privileged GTK top-level window could not be hidden fail-closed"),
             Self::TopLevelShowFailed => formatter
                 .write_str("initialized privileged GTK top-level window did not become visible"),
+            Self::SettingsUnavailable => formatter
+                .write_str("the privileged WebKitWebView did not expose its settings"),
         }
     }
 }
@@ -170,7 +173,7 @@ pub fn init(window: &WebviewWindow) -> Result<(), LinuxInitError> {
         .default_vbox()
         .map_err(|error| LinuxInitError::DefaultVBoxUnavailable(error.to_string()))?;
     let chrome = privileged_webview(&vbox)?;
-    harden_privileged_webview(&chrome)?;
+    harden_privileged_webview(&chrome, crate::appearance_is_light(window))?;
     install_composition(
         &gtk_window,
         &vbox,
@@ -260,7 +263,34 @@ pub fn harden_privileged(window: &WebviewWindow) -> Result<(), LinuxInitError> {
         .default_vbox()
         .map_err(|error| LinuxInitError::DefaultVBoxUnavailable(error.to_string()))?;
     let chrome = privileged_webview(&vbox)?;
-    harden_privileged_webview(&chrome)
+    harden_privileged_webview(&chrome, crate::appearance_is_light(window))
+}
+
+/// Repaints the native ground after the material or theme changed. Without it
+/// the opaque toplevel shows the previous theme's background in the gaps
+/// between navigations.
+pub(crate) fn apply_material_ground(window: &WebviewWindow) {
+    let Ok(vbox) = window.default_vbox() else {
+        return;
+    };
+    let Ok(chrome) = privileged_webview(&vbox) else {
+        return;
+    };
+    apply_ground(&chrome, crate::appearance_is_light(window));
+}
+
+fn apply_ground(chrome: &webkit2gtk::WebView, light: bool) {
+    use webkit2gtk::WebViewExt;
+
+    let [red, green, blue] = crate::material::ground(light);
+    // Fully opaque: the toplevel no longer carries alpha on Linux, so the
+    // unstyled flash between navigations must be the chrome ground itself.
+    chrome.set_background_color(&gtk::gdk::RGBA::new(
+        f64::from(red) / 255.0,
+        f64::from(green) / 255.0,
+        f64::from(blue) / 255.0,
+        1.0,
+    ));
 }
 
 fn privileged_webview(vbox: &gtk::Box) -> Result<webkit2gtk::WebView, LinuxInitError> {
@@ -274,9 +304,13 @@ fn privileged_webview(vbox: &gtk::Box) -> Result<webkit2gtk::WebView, LinuxInitE
         .ok_or(LinuxInitError::PrivilegedChildIsNotWebView)
 }
 
-fn harden_privileged_webview(chrome: &webkit2gtk::WebView) -> Result<(), LinuxInitError> {
+fn harden_privileged_webview(
+    chrome: &webkit2gtk::WebView,
+    light: bool,
+) -> Result<(), LinuxInitError> {
     use webkit2gtk::{
-        DownloadExt, FileChooserRequestExt, PermissionRequestExt, WebContextExt, WebViewExt,
+        DownloadExt, FileChooserRequestExt, PermissionRequestExt, SettingsExt, WebContextExt,
+        WebViewExt,
     };
 
     chrome.connect_permission_request(|_, request| {
@@ -316,7 +350,56 @@ fn harden_privileged_webview(chrome: &webkit2gtk::WebView) -> Result<(), LinuxIn
         // SAFETY: see the typed private-key invariant above.
         unsafe { context.set_data(DOWNLOAD_DENY_MARKER, true) };
     }
+
+    // Widget and WebView both expose `settings`; this view's own accessor is
+    // the one that reports WebKit's settings object.
+    let settings =
+        webkit2gtk::WebViewExt::settings(chrome).ok_or(LinuxInitError::SettingsUnavailable)?;
+    settings.set_hardware_acceleration_policy(match crate::render_backend::current() {
+        crate::render_backend::Choice::Software => webkit2gtk::HardwareAccelerationPolicy::Never,
+        crate::render_backend::Choice::Fallback => webkit2gtk::HardwareAccelerationPolicy::OnDemand,
+        crate::render_backend::Choice::Dmabuf => webkit2gtk::HardwareAccelerationPolicy::Always,
+    });
+    apply_ground(chrome, light);
+
+    if let Some(limit) = memory_limit_mb() {
+        // Property-only on WebContext; the builder cannot be used for Tauri's
+        // context. WebKit marks it construct-only, and glib panics on
+        // `set_property` for any property that is not writable or is
+        // construct-only, so both flags must be checked rather than the mere
+        // presence of the property. The context Tauri built is already
+        // realized, so this is a no-op there instead of a failed launch.
+        if let Some(spec) = context.find_property("memory-pressure-settings") {
+            let flags = spec.flags();
+            if flags.contains(glib::ParamFlags::WRITABLE)
+                && !flags.contains(glib::ParamFlags::CONSTRUCT_ONLY)
+            {
+                let mut pressure = webkit2gtk::MemoryPressureSettings::new();
+                pressure.set_memory_limit(limit);
+                // WebKit asserts conservative < strict < kill.
+                pressure.set_strict_threshold(0.7);
+                pressure.set_conservative_threshold(0.6);
+                pressure.set_kill_threshold(0.9);
+                context.set_property("memory-pressure-settings", &pressure);
+            }
+        }
+    }
     Ok(())
+}
+
+/// A quarter of installed RAM, capped: WebKit trims toward this limit instead
+/// of reserving it, so the cap bounds its pressure policy, not the allocation.
+fn memory_limit_mb() -> Option<u32> {
+    let meminfo = std::fs::read_to_string("/proc/meminfo").ok()?;
+    let total_kb = meminfo.lines().find_map(|line| {
+        line.strip_prefix("MemTotal:")?
+            .trim()
+            .strip_suffix("kB")
+            .map(str::trim)?
+            .parse::<u64>()
+            .ok()
+    })?;
+    Some(((total_kb / 4 / 1024).clamp(1024, 4096)) as u32)
 }
 
 fn require_gtk_main_thread() -> Result<(), LinuxInitError> {
@@ -671,8 +754,31 @@ mod shortcut_tests {
         }
     }
 
+    /// `gtk::accelerator_get_default_mod_mask` needs a running GTK, and the
+    /// test binary starts none. Initialize it once per process; a second call
+    /// reports the process as already initialized, which is not a failure.
+    /// Without a display the test is skipped out loud rather than passed.
+    fn ensure_gtk() -> bool {
+        static INITIALIZED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+        *INITIALIZED.get_or_init(|| match gtk::init() {
+            Ok(()) => true,
+            Err(_) if gtk::is_initialized_main_thread() => true,
+            Err(error) => {
+                eprintln!(
+                    "skipping focused_shortcut_requires_exact_non_lock_modifiers: \
+                     GTK could not be initialized ({error}), so there is no display for the \
+                     default accelerator mask"
+                );
+                false
+            }
+        })
+    }
+
     #[test]
     fn focused_shortcut_requires_exact_non_lock_modifiers() {
+        if !ensure_gtk() {
+            return;
+        }
         let expected = shortcut_modifiers(&launcher_shortcut());
         assert_eq!(
             observed_shortcut_modifiers(
