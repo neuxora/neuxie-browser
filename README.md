@@ -41,7 +41,7 @@ NO_STRIP=1 pnpm -C desktop build --bundles appimage
 ```
 
 The command yields
-`target/release/bundle/appimage/app.neuxie_1.0.3_amd64.AppImage` — the file name
+`target/release/bundle/appimage/app.neuxie_1.0.4_amd64.AppImage` — the file name
 is the application id, the version in `tauri.conf.json`, and the Debian
 architecture, because the bundler derives it from the Linux `productName` (which
 must stay `app.neuxie` so the installed entry is `app.neuxie.desktop`).
@@ -59,23 +59,74 @@ alongside them).
 ## Run
 
 ```sh
-./target/release/bundle/appimage/app.neuxie_1.0.3_amd64.AppImage
+./target/release/bundle/appimage/app.neuxie_1.0.4_amd64.AppImage
 ```
 
 If FUSE is unavailable (common in containers and some minimal installs), unpack
 and run instead:
 
 ```sh
-./app.neuxie_1.0.3_amd64.AppImage --appimage-extract-and-run
+./app.neuxie_1.0.4_amd64.AppImage --appimage-extract-and-run
 ```
 
 The bundled WebKitGTK stays sandboxed, so the host must provide `bwrap` and
 `xdg-dbus-proxy` (Arch: `bubblewrap`, `xdg-dbus-proxy`).
 
-On Wayland systems with a proprietary NVIDIA driver, a page may stay blank
-because of the GBM/dmabuf path. Launch with `WEBKIT_DISABLE_DMABUF_RENDERER=1`
-set in the environment to render through the fallback. That is a local
-workaround for this machine class, not something the shipped desktop entry sets.
+## Rendering on Linux
+
+Neuxie picks WebKitGTK's render backend itself at startup, before GTK initialises, so the AppImage needs
+no render environment from whoever launches it. The decision is reported once on stderr, prefixed like
+every other line in the session log:
+
+```
+ts_ms=... session=... render: backend=Fallback session=Wayland nvidia=true reason=nvidia
+```
+
+The rule is vendor-based. A machine that exposes the NVIDIA kernel module
+(`/proc/driver/nvidia/version` or `/sys/module/nvidia/version`) gets WebKit's fallback renderer, because
+the proprietary and the open-kernel module both break the GBM/dmabuf path under Wayland and X11 alike.
+Every other machine keeps the dmabuf renderer. `reason` is one of `nvidia`, `request`, `environment` or
+`default`.
+
+| `NEUXIE_RENDER_BACKEND` | Effect |
+| --- | --- |
+| unset, or `auto` | detect (default) |
+| `dmabuf` | force the dmabuf renderer |
+| `fallback` | disable the dmabuf renderer |
+| `software` | disable dmabuf and compositing |
+
+A `WEBKIT_DISABLE_DMABUF_RENDERER` that is already set always wins, so a launcher wrapper keeps working
+unchanged.
+
+Two things to know before reporting a rendering bug:
+
+- The toplevel is opaque. No Linux build installs a native window material, so the alpha path bought
+  nothing and cost an ARGB visual and a compositing surface for every window. Translucent chrome now
+  blends against the window's own ground instead of whatever sits behind the window, so such a surface
+  can look different from 1.0.3 over a wallpaper.
+- WebKit's memory-pressure settings are construct-only on the bundled WebKitGTK 4.1, so the app leaves
+  them alone instead of panicking during startup. Memory use is unchanged from 1.0.3, and the table below
+  is the check.
+
+### Measured on this class of machine
+
+RTX 3050 Ti Laptop 4 GB (NVIDIA kernel module 615.78.08), Hyprland 0.56.2 on native Wayland, 16 cores,
+14 GB RAM. `x11` means `GDK_BACKEND=x11`, which resolves to XWayland here; no bare Xorg session was
+available to test against.
+
+| | 1.0.3 | 1.0.4 |
+| --- | --- | --- |
+| launch with no render environment, native Wayland | process dies about 1.7 s after the window maps: `Gdk-Message: Error 71 (Protocol error) dispatching to Wayland display` | runs; prints `render: backend=Fallback session=Wayland nvidia=true reason=nvidia` |
+| 600-frame scroll workload | never completes; the page never calls back | 599 of 599 frames, both sessions |
+| frame time p50 / p95 | 17 / 31 ms, and only with the workaround exported; x11 produced no result | 17 / 19 ms native, 17 / 17 ms x11 |
+| frames over 33.3 ms | up to 17 of 599 | 0 |
+| idle flicker over 10 s, chrome band and whole window | 0 recorded, but the interactive state could not be exercised because the workload never ran | 0 in all four runs, peak frame difference 0.29 against the 2.0 threshold |
+| steady PSS with the page loaded | 673.4 MiB native | 672.6 MiB native (−0.06%), 582.1 vs 616.6 MiB on x11 (−5.6%) |
+| VRAM used while loaded | +5 MiB | +13 MiB |
+| launch to window shown | 1470 ms | 1230 ms |
+
+`scripts/measure-render.mjs`, `scripts/measure-memory.mjs` and `scripts/measure-flicker.sh` are in the
+tree so these numbers can be re-taken on another machine.
 
 This fork does not ship signed auto-updates yet, so updates are manual: re-download the newer AppImage from the releases page.
 
