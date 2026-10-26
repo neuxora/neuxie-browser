@@ -4,7 +4,8 @@
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
-const DESKTOP_ID: &str = "app.zephium.desktop";
+/// The installed desktop entry's basename, which is the application id.
+const DESKTOP_ID: &str = concat!(env!("NEUXIE_APP_ID"), ".desktop");
 
 /// Only an installed desktop entry can be chosen; a development binary has
 /// none, and xdg-settings would record a browser that cannot launch.

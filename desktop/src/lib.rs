@@ -5830,6 +5830,11 @@ pub fn run() {
         );
         std::process::exit(1);
     }
+    // GTK 3 names the Wayland toplevel after the program name and the class
+    // half of the X11 WM_CLASS after the program class. Both should say the
+    // application id the installed desktop entry declares.
+    #[cfg(target_os = "linux")]
+    gtk::glib::set_prgname(Some(env!("NEUXIE_APP_ID")));
     install_async_runtime();
     APP_STARTED.get_or_init(std::time::Instant::now);
     let context = tauri::generate_context!();
@@ -5920,6 +5925,11 @@ pub fn run() {
         // until the app-managed shell publishes authoritative ownership.
         .manage(StartupBlocker::default())
         .setup(move |app| {
+            // GDK derives the Wayland app_id and the X11 WM_CLASS from the
+            // binary name. Name the application id instead, so the window
+            // manager and the installed desktop entry's StartupWMClass agree.
+            #[cfg(target_os = "linux")]
+            gtk::gdk::set_program_class(env!("NEUXIE_APP_ID"));
             let setup_result: SetupResult = (|| {
                 let shutdown = app
                     .try_state::<ShutdownCoordinator>()
@@ -8147,14 +8157,13 @@ mod tests {
             );
         }
         let template = include_str!("../linux/neuxie.desktop.hbs");
-        for exact in [
-            "Name=Neuxie Browser",
-            "StartupWMClass=app.neuxie",
-            "Exec={{exec}} %U",
-            "Icon={{icon}}",
-        ] {
+        for exact in ["Name=Neuxie Browser", "Exec={{exec}} %U", "Icon={{icon}}"] {
             assert_eq!(template.lines().filter(|line| *line == exact).count(), 1);
         }
+        // The shell sets this value as its GDK program class, so the installed
+        // entry and the window the manager actually sees cannot drift apart.
+        let startup = format!("StartupWMClass={}", env!("NEUXIE_APP_ID"));
+        assert_eq!(template.lines().filter(|line| *line == startup).count(), 1);
     }
 
     #[test]

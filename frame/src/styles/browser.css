@@ -253,7 +253,12 @@
 .zephium-wordmark {
   display: block;
   width: 260px;
-  height: 38px;
+  /* The mask is the artwork's own box (3652.93 x 773.93); following that
+     aspect keeps the letters filling the element instead of letterboxing
+     them inside a wider one, and keeps them proportional when max-width
+     narrows it. */
+  aspect-ratio: 3652.93 / 773.93;
+  block-size: auto;
   flex: none;
   background: var(--color-text);
   opacity: 0.9;

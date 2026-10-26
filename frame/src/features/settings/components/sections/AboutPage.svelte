@@ -230,7 +230,6 @@
 
   .zephium-wordmark {
     inline-size: 150px;
-    block-size: 22px;
   }
 
   .upstream-credit a {

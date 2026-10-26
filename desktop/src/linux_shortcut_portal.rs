@@ -23,7 +23,8 @@ const REQUEST_INTERFACE: &str = "org.freedesktop.portal.Request";
 const SESSION_INTERFACE: &str = "org.freedesktop.portal.Session";
 const REQUEST_PATH_PREFIX: &str = "/org/freedesktop/portal/desktop/request";
 const SESSION_PATH_PREFIX: &str = "/org/freedesktop/portal/desktop/session";
-const PORTAL_DESKTOP_ID: &str = "app.zephium";
+/// The desktop entry the host portal resolves this process's app id through.
+const PORTAL_DESKTOP_ID: &str = env!("NEUXIE_APP_ID");
 const SHORTCUT_ID: &str = LAUNCHER_COMMAND_ID;
 const SHORTCUT_DESCRIPTION: &str = "Toggle Neuxie launcher";
 const CANCELLATION_POLL: Duration = Duration::from_millis(100);

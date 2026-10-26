@@ -31,29 +31,46 @@ Prerequisites:
 - GTK 3 and WebKitGTK 4.1 with its development headers
 - `libayatana-appindicator` (Arch: `libappindicator`), `libsecret`
 - GStreamer and its plugins, for media playback
-- The usual build tools (`gcc`, `pkg-config`, `patchelf`)
+- The usual build tools (`gcc`, `pkg-config`, `patchelf`), plus `bwrap` and
+  `xdg-dbus-proxy` for the bundle and for running it (`bubblewrap`,
+  `xdg-dbus-proxy` on Arch)
 
 ```sh
 pnpm install --frozen-lockfile
-pnpm -C desktop build -- --bundles appimage
+NO_STRIP=1 pnpm -C desktop build --bundles appimage
 ```
 
-The AppImage lands in `target/release/bundle/appimage/`. A plain development
-build is `cargo build -p zephium-desktop` (debug binaries load the frontend from
-`http://localhost:1420`, so run `pnpm --dir frame dev` alongside them).
+The command yields
+`target/release/bundle/appimage/app.neuxie_1.0.3_amd64.AppImage` — the file name
+is the application id, the version in `tauri.conf.json`, and the Debian
+architecture, because the bundler derives it from the Linux `productName` (which
+must stay `app.neuxie` so the installed entry is `app.neuxie.desktop`).
+
+`NO_STRIP=1` is required where the distro's binutils emit `.relr.dyn` sections:
+the `strip` that ships inside linuxdeploy cannot read them and aborts the
+bundle. The post-bundle step in `scripts/patch-appimage-sandbox.mjs` repairs the
+library paths linuxdeploy relocates and repacks the image; without it the
+AppImage dies at startup because WebKitGTK cannot find `bwrap`.
+
+A plain development build is `cargo build -p zephium-desktop` (debug binaries
+load the frontend from `http://localhost:1420`, so run `pnpm --dir frame dev`
+alongside them).
 
 ## Run
 
 ```sh
-./target/release/bundle/appimage/Neuxie_*_amd64.AppImage
+./target/release/bundle/appimage/app.neuxie_1.0.3_amd64.AppImage
 ```
 
 If FUSE is unavailable (common in containers and some minimal installs), unpack
 and run instead:
 
 ```sh
-./Neuxie_*_amd64.AppImage --appimage-extract-and-run
+./app.neuxie_1.0.3_amd64.AppImage --appimage-extract-and-run
 ```
+
+The bundled WebKitGTK stays sandboxed, so the host must provide `bwrap` and
+`xdg-dbus-proxy` (Arch: `bubblewrap`, `xdg-dbus-proxy`).
 
 On Wayland systems with a proprietary NVIDIA driver, a page may stay blank
 because of the GBM/dmabuf path. Launch with `WEBKIT_DISABLE_DMABUF_RENDERER=1`

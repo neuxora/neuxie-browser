@@ -104,6 +104,10 @@ fn validate_privileged_window_ownership() -> Result<(), Box<dyn Error>> {
         // rerun this guard instead of reusing a previously successful build.
         println!("cargo:rerun-if-changed={}", root.join(name).display());
     }
+    // One source of truth for the GTK application id: the shell sets the GDK
+    // program class from it so WM_CLASS and the Wayland app_id match the
+    // installed desktop entry's StartupWMClass.
+    println!("cargo:rustc-env=NEUXIE_APP_ID={LINUX_APP_ID}");
     println!(
         "cargo:rerun-if-changed={}",
         root.join(LINUX_DESKTOP_TEMPLATE).display()
@@ -341,9 +345,10 @@ fn validate_linux_identity(source: &str, config: &Value, root: &Path) -> io::Res
 fn validate_linux_desktop_template(path: &Path) -> io::Result<()> {
     let template = fs::read_to_string(path)?;
     // `%U` is how the desktop hands a clicked link to the default browser.
+    let startup_class = format!("StartupWMClass={LINUX_APP_ID}");
     for exact in [
         "Exec={{exec}} %U",
-        "StartupWMClass=app.neuxie",
+        startup_class.as_str(),
         "Icon={{icon}}",
         "Name=Neuxie Browser",
         "Terminal=false",
